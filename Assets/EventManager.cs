@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public static class EventManager {
     private static Dictionary<string, Action> eventDictionary = new Dictionary<string, Action>();
@@ -7,6 +8,7 @@ public static class EventManager {
     private static Dictionary<string, Action<float>> floatEventDictionary = new Dictionary<string, Action<float>>();
     private static Dictionary<string, Action<bool>> boolEventDictionary = new Dictionary<string, Action<bool>>();
     private static Dictionary<string, Action<string>> stringEventDictionary = new Dictionary<string, Action<string>>();
+    private static Dictionary<string, Action<Vector3>> vector3EventDictionary = new Dictionary<string, Action<Vector3>>();
 
     #region AddListeners
     public static void AddListener(string eventName, Action listener) {
@@ -49,7 +51,6 @@ public static class EventManager {
         }
     }
 
-
     public static void AddListener(string eventName, Action<string> listener)
     {
         if (stringEventDictionary.ContainsKey(eventName))
@@ -59,6 +60,18 @@ public static class EventManager {
         else
         {
             stringEventDictionary.Add(eventName, listener);
+        }
+    }
+
+    public static void AddListener(string eventName, Action<Vector3> listener)
+    {
+        if (vector3EventDictionary.ContainsKey(eventName))
+        {
+            vector3EventDictionary[eventName] += listener;
+        }
+        else
+        {
+            vector3EventDictionary.Add(eventName, listener);
         }
     }
     #endregion
@@ -97,6 +110,14 @@ public static class EventManager {
         if (stringEventDictionary.ContainsKey(eventName))
         {
             stringEventDictionary[eventName] -= listener;
+        }
+    }
+
+    public static void RemoveListener(string eventName, Action<Vector3> listener)
+    {
+        if (vector3EventDictionary.ContainsKey(eventName))
+        {
+            vector3EventDictionary[eventName] -= listener;
         }
     }
     #endregion
@@ -140,6 +161,15 @@ public static class EventManager {
         if (stringEventDictionary.TryGetValue(eventName, out thisEvent))
         {
             thisEvent?.Invoke(gameObject);
+        }
+    }
+
+    public static void TriggerEvent(string eventName, Vector3 value)
+    {
+        Action<Vector3> thisEvent = null;
+        if (vector3EventDictionary.TryGetValue(eventName, out thisEvent))
+        {
+            thisEvent?.Invoke(value);
         }
     }
     #endregion

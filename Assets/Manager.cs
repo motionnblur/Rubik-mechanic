@@ -34,9 +34,11 @@ public class Manager : MonoBehaviour
         {            
             if (onSliceRight == true){
                 Debug.Log("Hit to the right");
+                EventManager.TriggerEvent("OnRotateRight", hit.point);
             }
             else if (onSliceRight == false){
                 Debug.Log("Hit to the left");
+                EventManager.TriggerEvent("OnRotateLeft", hit.point);
             }
             movable = false;
         }
