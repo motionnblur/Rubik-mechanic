@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Manager : MonoBehaviour
@@ -6,6 +8,7 @@ public class Manager : MonoBehaviour
     private bool onSliceRight = false;
     private bool onSliceStarted = false;
     private bool movable = true;
+    private GameObject [] cubes = new GameObject[54];
     void OnEnable()
     {
         EventManager.AddListener("OnMouseDown", OnMouseDown);
@@ -22,6 +25,10 @@ public class Manager : MonoBehaviour
         EventManager.RemoveListener("OnSliceLeft", OnSliceLeft);
         EventManager.RemoveListener("OnSliceCenter", OnSliceCenter);
     }
+    private void Start()
+    {
+        cubes = GameObject.FindGameObjectsWithTag("cube");
+    }
     void Update()
     {
         if(!movable) return;
@@ -34,6 +41,11 @@ public class Manager : MonoBehaviour
         {            
             if (onSliceRight == true){
                 Debug.Log("Hit to the right");
+                
+                GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
+                Vector3 center = GetCenter(childCubes);
+                Debug.Log(center);
+
                 EventManager.TriggerEvent("OnRotateRight", hit.point);
             }
             else if (onSliceRight == false){
@@ -66,5 +78,31 @@ public class Manager : MonoBehaviour
         mouseDown = false;
         onSliceStarted = false;
         movable = true;
+    }
+    GameObject[] FindGameObjectsWithYPosition(float yPos)
+    {
+        GameObject[] returnArr = new GameObject[9];
+        int counter = 0;
+        foreach (GameObject obj in cubes)
+        {
+            if (Mathf.Abs(obj.transform.position.y - yPos) < 0.01f) // Check if the y position is close to 0.5
+            {
+                Debug.Log("Found GameObject: " + obj.name);
+                returnArr[counter++] = obj;
+            }
+        }
+        return returnArr;
+    }
+    Vector3 GetCenter(GameObject[] objects)
+    {
+        Vector3 center = Vector3.zero;
+
+        foreach (GameObject obj in objects)
+        {
+            center += obj.transform.position;
+        }
+        center /= objects.Length;
+
+        return center;
     }
 }

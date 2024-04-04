@@ -18,9 +18,19 @@ public class RubikBrain : MonoBehaviour
     private void OnRotateRight(Vector3 pos)
     {
         Debug.Log(pos);
+
+        if(pos.y > 0.5f && pos.y < 1.5f)
+        {
+            
+        }
     }
     private void OnRotateLeft(Vector3 pos)
     {
         Debug.Log(pos);
+
+        if(pos.y > 0.5f && pos.y < 1.5f)
+        {
+            
+        }
     }
 }
