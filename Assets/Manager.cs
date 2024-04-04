@@ -9,7 +9,7 @@ public class Manager : MonoBehaviour
     private bool onSliceStarted = false;
     private bool movable = true;
     private GameObject [] cubes = new GameObject[54];
-    [SerializeField] private GameObject pivotObj;
+    [SerializeField] private GameObject rubik;
     void OnEnable()
     {
         EventManager.AddListener("OnMouseDown", OnMouseDown);
@@ -46,6 +46,8 @@ public class Manager : MonoBehaviour
                 GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
                 Vector3 center = GetCenter(childCubes);
 
+                GameObject pivotObj = new GameObject("Pivot");
+                pivotObj.transform.SetParent(rubik.transform);
                 pivotObj.transform.position = center;
 
                 foreach (GameObject obj in childCubes)

@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6298302d7aa03741a8fed32b572cf61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pivotObj: {fileID: 7489512920325263601}
+  rubik: {fileID: 1825501286}
 --- !u!114 &476711913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,6 +380,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1825501286 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2889824558534734711, guid: d66108685bf189c4db77c9e1f6a38f91, type: 3}
+  m_PrefabInstance: {fileID: 7489512920325263600}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7489512920325263600
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -437,11 +442,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d66108685bf189c4db77c9e1f6a38f91, type: 3}
---- !u!1 &7489512920325263601 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1592415572572109544, guid: d66108685bf189c4db77c9e1f6a38f91, type: 3}
-  m_PrefabInstance: {fileID: 7489512920325263600}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
