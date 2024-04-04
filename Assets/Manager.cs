@@ -9,6 +9,7 @@ public class Manager : MonoBehaviour
     private bool onSliceStarted = false;
     private bool movable = true;
     private GameObject [] cubes = new GameObject[54];
+    [SerializeField] private GameObject pivotObj;
     void OnEnable()
     {
         EventManager.AddListener("OnMouseDown", OnMouseDown);
@@ -44,7 +45,13 @@ public class Manager : MonoBehaviour
                 
                 GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
                 Vector3 center = GetCenter(childCubes);
-                Debug.Log(center);
+
+                pivotObj.transform.position = center;
+
+                foreach (GameObject obj in childCubes)
+                {
+                    obj.transform.SetParent(pivotObj.transform);
+                }
 
                 EventManager.TriggerEvent("OnRotateRight", hit.point);
             }
@@ -85,7 +92,7 @@ public class Manager : MonoBehaviour
         int counter = 0;
         foreach (GameObject obj in cubes)
         {
-            if (Mathf.Abs(obj.transform.position.y - yPos) < 0.01f) // Check if the y position is close to 0.5
+            if (Mathf.Abs(obj.transform.position.y - yPos) < 0.5f) // Check if the y position is close to 0.5
             {
                 Debug.Log("Found GameObject: " + obj.name);
                 returnArr[counter++] = obj;
