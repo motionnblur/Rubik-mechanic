@@ -14,6 +14,7 @@ public class Manager : MonoBehaviour
     private bool movable = true;
     private GameObject [] cubes = new GameObject[54];
     [SerializeField] private GameObject rubik;
+    private GameObject pivot;
     void OnEnable()
     {
         EventManager.AddListener("OnMouseDown", OnMouseDown);
@@ -35,6 +36,10 @@ public class Manager : MonoBehaviour
         EventManager.RemoveListener("OnSliceDown", OnSliceDown);
         EventManager.RemoveListener("OnSliceCenter", OnSliceCenter);
         EventManager.RemoveListener("OnPivotReset", OnPivotReset);
+    }
+    private void Awake()
+    {
+        pivot = GameObject.FindWithTag("Pivot");
     }
     private void Start()
     {
@@ -58,16 +63,14 @@ public class Manager : MonoBehaviour
                     GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
                     Vector3 center = GetCenter(childCubes);
 
-                    GameObject pivotObj = new GameObject("Pivot");
-                    pivotObj.transform.SetParent(rubik.transform);
-                    pivotObj.transform.position = center;
+                    pivot.transform.position = center;
 
                     foreach (GameObject obj in childCubes)
                     {
-                        obj.transform.SetParent(pivotObj.transform);
+                        obj.transform.SetParent(pivot.transform);
                     }
 
-                    EventManager.TriggerEvent("OnRotateRight", pivotObj);
+                    EventManager.TriggerEvent("OnRotateRight", pivot);
 
                     onSliceRight = false;
                     onSliceLeftRight = false;
@@ -77,16 +80,14 @@ public class Manager : MonoBehaviour
                     GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
                     Vector3 center = GetCenter(childCubes);
 
-                    GameObject pivotObj = new GameObject("Pivot");
-                    pivotObj.transform.SetParent(rubik.transform);
-                    pivotObj.transform.position = center;
+                    pivot.transform.position = center;
 
                     foreach (GameObject obj in childCubes)
                     {
-                        obj.transform.SetParent(pivotObj.transform);
+                        obj.transform.SetParent(pivot.transform);
                     }
 
-                    EventManager.TriggerEvent("OnRotateLeft", pivotObj);
+                    EventManager.TriggerEvent("OnRotateLeft", pivot);
 
                     onSliceRight = true;
                     onSliceLeftRight = false;
@@ -100,16 +101,14 @@ public class Manager : MonoBehaviour
                     GameObject[] childCubes = FindGameObjectsWithXPosition(hit.point.x);
                     Vector3 center = GetCenter(childCubes);
 
-                    GameObject pivotObj = new GameObject("Pivot");
-                    pivotObj.transform.SetParent(rubik.transform);
-                    pivotObj.transform.position = center;
+                    pivot.transform.position = center;
 
                     foreach (GameObject obj in childCubes)
                     {
-                        obj.transform.SetParent(pivotObj.transform);
+                        obj.transform.SetParent(pivot.transform);
                     }
 
-                    EventManager.TriggerEvent("OnRotateUp", pivotObj);
+                    EventManager.TriggerEvent("OnRotateUp", pivot);
 
                     onSliceUp = false;
                     onSliceUpDown = false;
@@ -119,16 +118,14 @@ public class Manager : MonoBehaviour
                     GameObject[] childCubes = FindGameObjectsWithXPosition(hit.point.x);
                     Vector3 center = GetCenter(childCubes);
 
-                    GameObject pivotObj = new GameObject("Pivot");
-                    pivotObj.transform.SetParent(rubik.transform);
-                    pivotObj.transform.position = center;
+                    pivot.transform.position = center;
 
                     foreach (GameObject obj in childCubes)
                     {
-                        obj.transform.SetParent(pivotObj.transform);
+                        obj.transform.SetParent(pivot.transform);
                     }
 
-                    EventManager.TriggerEvent("OnRotateDown", pivotObj);
+                    EventManager.TriggerEvent("OnRotateDown", pivot);
                     Debug.Log("downnn");
 
                     onSliceUp = true;
@@ -176,23 +173,18 @@ public class Manager : MonoBehaviour
         onSliceStarted = false;
         movable = true;
     }
-    void OnPivotReset(GameObject pivotObj)
-    {
-        GameObject pivotToDestroy = GameObject.Find("Pivot");
-        if(pivotToDestroy != null)
-        {
-            Destroy(pivotToDestroy);
-        }
-        
+    void OnPivotReset(GameObject pivot)
+    {        
         List<GameObject> childCubes = new List<GameObject>();
-        for(int i = 0; i < pivotObj.transform.childCount; i++)
+        for(int i = 0; i < pivot.transform.childCount; i++)
         {
-            childCubes.Add(pivotObj.transform.GetChild(i).gameObject);
+            childCubes.Add(pivot.transform.GetChild(i).gameObject);
         }
         for(int i = 0; i < childCubes.Count; i++)
         {
             childCubes[i].transform.SetParent(rubik.transform);
         }
+        pivot.transform.rotation = Quaternion.identity;
     }
     GameObject[] FindGameObjectsWithYPosition(float yPos)
     {
