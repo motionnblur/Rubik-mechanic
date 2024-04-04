@@ -1,10 +1,10 @@
+using System;
 using UnityEngine;
 
 public class GestureManager : MonoBehaviour
 {
     private Vector3 previousMousePosition;
 
-    // Update is called once per frame
     void Update()
     {
         Vector3 currentMousePosition = Input.mousePosition;
@@ -16,20 +16,33 @@ public class GestureManager : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            float direction = currentMousePosition.x - previousMousePosition.x;
+            float directionX = currentMousePosition.x - previousMousePosition.x;
+            float directionY = currentMousePosition.y - previousMousePosition.y;
 
-            if (direction > 0)
+            if(Mathf.Abs(directionX) > Mathf.Abs(directionY))
             {
-                EventManager.TriggerEvent("OnSliceRight");
+                if(directionX > 0f)
+                {
+                    EventManager.TriggerEvent("OnSliceLeft");
+                }
+                else
+                {
+                    EventManager.TriggerEvent("OnSliceRight");
+                }
             }
-            else if (direction < 0)
+            else
             {
-                EventManager.TriggerEvent("OnSliceLeft");
-            }else{
-                EventManager.TriggerEvent("OnSliceCenter");
-            }
+                if(directionY > 0f)
+                {
+                    EventManager.TriggerEvent("OnSliceUp");
+                }
+                else if(directionY < 0f)
+                {
+                    EventManager.TriggerEvent("OnSliceDown");
+                }
 
             previousMousePosition = currentMousePosition;
+            }
         }
     }
 }

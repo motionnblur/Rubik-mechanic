@@ -5,7 +5,10 @@ using UnityEngine;
 public class Manager : MonoBehaviour
 {
     private bool mouseDown = false;
+    private bool onSliceUpDown = false;
+    private bool onSliceLeftRight = false;
     private bool onSliceRight = false;
+    private bool onSliceUp = false;
     private bool onSliceStarted = false;
     private bool movable = true;
     private GameObject [] cubes = new GameObject[54];
@@ -16,6 +19,8 @@ public class Manager : MonoBehaviour
         EventManager.AddListener("OnMouseUp", OnMouseUp);
         EventManager.AddListener("OnSliceRight", OnSliceRight);
         EventManager.AddListener("OnSliceLeft", OnSliceLeft);
+        EventManager.AddListener("OnSliceUp", OnSliceUp);
+        EventManager.AddListener("OnSliceDown", OnSliceDown);
         EventManager.AddListener("OnSliceCenter", OnSliceCenter);
     }
     void OnDestroy()
@@ -24,6 +29,8 @@ public class Manager : MonoBehaviour
         EventManager.RemoveListener("OnMouseUp", OnMouseUp);
         EventManager.RemoveListener("OnSliceRight", OnSliceRight);
         EventManager.RemoveListener("OnSliceLeft", OnSliceLeft);
+        EventManager.RemoveListener("OnSliceUp", OnSliceUp);
+        EventManager.RemoveListener("OnSliceDown", OnSliceDown);
         EventManager.RemoveListener("OnSliceCenter", OnSliceCenter);
     }
     private void Start()
@@ -41,47 +48,151 @@ public class Manager : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {            
-            if (onSliceRight == true){                
-                GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
-                Vector3 center = GetCenter(childCubes);
+            if(onSliceLeftRight == true)
+            {
+                if (onSliceRight == true)
+                {                
+                    if(hit.collider.gameObject.transform.parent.name.Equals("Pivot"))
+                    {
+                        EventManager.TriggerEvent("OnRotateRight", hit.collider.gameObject.transform.parent.gameObject);
 
-                GameObject pivotObj = new GameObject("Pivot");
-                pivotObj.transform.SetParent(rubik.transform);
-                pivotObj.transform.position = center;
+                        onSliceRight = false;
+                        onSliceLeftRight = false;
+                        return;
+                    }
 
-                foreach (GameObject obj in childCubes)
-                {
-                    obj.transform.SetParent(pivotObj.transform);
+                    GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
+                    Vector3 center = GetCenter(childCubes);
+
+                    GameObject pivotObj = new GameObject("Pivot");
+                    pivotObj.transform.SetParent(rubik.transform);
+                    pivotObj.transform.position = center;
+
+                    foreach (GameObject obj in childCubes)
+                    {
+                        obj.transform.SetParent(pivotObj.transform);
+                    }
+
+                    EventManager.TriggerEvent("OnRotateRight", pivotObj);
+
+                    onSliceRight = false;
+                    onSliceLeftRight = false;
                 }
-
-                EventManager.TriggerEvent("OnRotateRight", pivotObj);
-            }
-            else if (onSliceRight == false){
-                GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
-                Vector3 center = GetCenter(childCubes);
-
-                GameObject pivotObj = new GameObject("Pivot");
-                pivotObj.transform.SetParent(rubik.transform);
-                pivotObj.transform.position = center;
-
-                foreach (GameObject obj in childCubes)
+                else if (onSliceRight == false)
                 {
-                    obj.transform.SetParent(pivotObj.transform);
-                }
+                    if(hit.collider.gameObject.transform.parent.name.Equals("Pivot"))
+                    {
+                        EventManager.TriggerEvent("OnRotateLeft", hit.collider.gameObject.transform.parent.gameObject);
 
-                EventManager.TriggerEvent("OnRotateLeft", pivotObj);
+                        onSliceRight = false;
+                        onSliceLeftRight = false;
+                        return;
+                    }
+
+                    GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
+                    Vector3 center = GetCenter(childCubes);
+
+                    GameObject pivotObj = new GameObject("Pivot");
+                    pivotObj.transform.SetParent(rubik.transform);
+                    pivotObj.transform.position = center;
+
+                    foreach (GameObject obj in childCubes)
+                    {
+                        obj.transform.SetParent(pivotObj.transform);
+                    }
+
+                    EventManager.TriggerEvent("OnRotateLeft", pivotObj);
+
+                    onSliceRight = true;
+                    onSliceLeftRight = false;
+                    }
+                    movable = false;
+                }
+            else if (onSliceUpDown == true)
+            {
+                if (onSliceUp == true)
+                {
+                    if(hit.collider.gameObject.transform.parent.name.Equals("Pivot"))
+                    {
+                        EventManager.TriggerEvent("OnRotateUp", hit.collider.gameObject.transform.parent.gameObject);
+
+                        onSliceUp = false;
+                        onSliceUpDown = false;
+                        return;
+                    }
+
+                    GameObject[] childCubes = FindGameObjectsWithXPosition(hit.point.x);
+                    Vector3 center = GetCenter(childCubes);
+
+                    GameObject pivotObj = new GameObject("Pivot");
+                    pivotObj.transform.SetParent(rubik.transform);
+                    pivotObj.transform.position = center;
+
+                    foreach (GameObject obj in childCubes)
+                    {
+                        obj.transform.SetParent(pivotObj.transform);
+                    }
+
+                    EventManager.TriggerEvent("OnRotateUp", pivotObj);
+
+                    onSliceUp = false;
+                    onSliceUpDown = false;
+                }
+                else if(onSliceUp == false)
+                {
+                    if(hit.collider.gameObject.transform.parent.name.Equals("Pivot"))
+                    {
+                        EventManager.TriggerEvent("OnRotateDown", hit.collider.gameObject.transform.parent.gameObject);
+
+                        onSliceUp = false;
+                        onSliceUpDown = false;
+                        return;
+                    }
+
+                    GameObject[] childCubes = FindGameObjectsWithXPosition(hit.point.x);
+                    Vector3 center = GetCenter(childCubes);
+
+                    GameObject pivotObj = new GameObject("Pivot");
+                    pivotObj.transform.SetParent(rubik.transform);
+                    pivotObj.transform.position = center;
+
+                    foreach (GameObject obj in childCubes)
+                    {
+                        obj.transform.SetParent(pivotObj.transform);
+                    }
+
+                    EventManager.TriggerEvent("OnRotateDown", pivotObj);
+                    Debug.Log("downnn");
+
+                    onSliceUp = false;
+                    onSliceUpDown = false;
+                }
+                movable = false;
             }
-            movable = false;
         }
     }
     void OnSliceLeft()
     {
+        onSliceLeftRight = true;
         onSliceRight = false;
         onSliceStarted = true;
     }
     void OnSliceRight()
     {
+        onSliceLeftRight = true;
         onSliceRight = true;
+        onSliceStarted = true;
+    }
+    void OnSliceUp()
+    {
+        onSliceUpDown = true;
+        onSliceUp = true;
+        onSliceStarted = true;
+    }
+    void OnSliceDown()
+    {
+        onSliceUpDown = true;
+        onSliceUp = false;
         onSliceStarted = true;
     }
     void OnSliceCenter()
@@ -105,6 +216,18 @@ public class Manager : MonoBehaviour
         foreach (GameObject obj in cubes)
         {
             if (Mathf.Abs(obj.transform.position.y - yPos) < 0.5f) // Check if the y position is close to 0.5
+            {
+                returnArr[counter++] = obj;
+            }
+        }
+        return returnArr;
+    }
+    GameObject[] FindGameObjectsWithXPosition(float xPos){
+        GameObject[] returnArr = new GameObject[9];
+        int counter = 0;
+        foreach (GameObject obj in cubes)
+        {
+            if (Mathf.Abs(obj.transform.position.x - xPos) < 0.5f) // Check if the y position is close to 0.5
             {
                 returnArr[counter++] = obj;
             }
