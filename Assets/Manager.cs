@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class Manager : MonoBehaviour
         EventManager.AddListener("OnSliceUp", OnSliceUp);
         EventManager.AddListener("OnSliceDown", OnSliceDown);
         EventManager.AddListener("OnSliceCenter", OnSliceCenter);
+        EventManager.AddListener("OnPivotReset", OnPivotReset);
     }
     void OnDestroy()
     {
@@ -32,6 +34,7 @@ public class Manager : MonoBehaviour
         EventManager.RemoveListener("OnSliceUp", OnSliceUp);
         EventManager.RemoveListener("OnSliceDown", OnSliceDown);
         EventManager.RemoveListener("OnSliceCenter", OnSliceCenter);
+        EventManager.RemoveListener("OnPivotReset", OnPivotReset);
     }
     private void Start()
     {
@@ -52,15 +55,6 @@ public class Manager : MonoBehaviour
             {
                 if (onSliceRight == true)
                 {                
-                    if(hit.collider.gameObject.transform.parent.name.Equals("Pivot"))
-                    {
-                        EventManager.TriggerEvent("OnRotateRight", hit.collider.gameObject.transform.parent.gameObject);
-
-                        onSliceRight = false;
-                        onSliceLeftRight = false;
-                        return;
-                    }
-
                     GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
                     Vector3 center = GetCenter(childCubes);
 
@@ -80,15 +74,6 @@ public class Manager : MonoBehaviour
                 }
                 else if (onSliceRight == false)
                 {
-                    if(hit.collider.gameObject.transform.parent.name.Equals("Pivot"))
-                    {
-                        EventManager.TriggerEvent("OnRotateLeft", hit.collider.gameObject.transform.parent.gameObject);
-
-                        onSliceRight = false;
-                        onSliceLeftRight = false;
-                        return;
-                    }
-
                     GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
                     Vector3 center = GetCenter(childCubes);
 
@@ -112,15 +97,6 @@ public class Manager : MonoBehaviour
             {
                 if (onSliceUp == true)
                 {
-                    if(hit.collider.gameObject.transform.parent.name.Equals("Pivot"))
-                    {
-                        EventManager.TriggerEvent("OnRotateUp", hit.collider.gameObject.transform.parent.gameObject);
-
-                        onSliceUp = false;
-                        onSliceUpDown = false;
-                        return;
-                    }
-
                     GameObject[] childCubes = FindGameObjectsWithXPosition(hit.point.x);
                     Vector3 center = GetCenter(childCubes);
 
@@ -140,15 +116,6 @@ public class Manager : MonoBehaviour
                 }
                 else if(onSliceUp == false)
                 {
-                    if(hit.collider.gameObject.transform.parent.name.Equals("Pivot"))
-                    {
-                        EventManager.TriggerEvent("OnRotateDown", hit.collider.gameObject.transform.parent.gameObject);
-
-                        onSliceUp = false;
-                        onSliceUpDown = false;
-                        return;
-                    }
-
                     GameObject[] childCubes = FindGameObjectsWithXPosition(hit.point.x);
                     Vector3 center = GetCenter(childCubes);
 
@@ -164,7 +131,7 @@ public class Manager : MonoBehaviour
                     EventManager.TriggerEvent("OnRotateDown", pivotObj);
                     Debug.Log("downnn");
 
-                    onSliceUp = false;
+                    onSliceUp = true;
                     onSliceUpDown = false;
                 }
                 movable = false;
@@ -208,6 +175,24 @@ public class Manager : MonoBehaviour
         mouseDown = false;
         onSliceStarted = false;
         movable = true;
+    }
+    void OnPivotReset(GameObject pivotObj)
+    {
+        GameObject pivotToDestroy = GameObject.Find("Pivot");
+        if(pivotToDestroy != null)
+        {
+            Destroy(pivotToDestroy);
+        }
+        
+        List<GameObject> childCubes = new List<GameObject>();
+        for(int i = 0; i < pivotObj.transform.childCount; i++)
+        {
+            childCubes.Add(pivotObj.transform.GetChild(i).gameObject);
+        }
+        for(int i = 0; i < childCubes.Count; i++)
+        {
+            childCubes[i].transform.SetParent(rubik.transform);
+        }
     }
     GameObject[] FindGameObjectsWithYPosition(float yPos)
     {

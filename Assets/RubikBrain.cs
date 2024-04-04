@@ -52,6 +52,7 @@ public class RubikBrain : MonoBehaviour
         pivotObj.transform.rotation = targetRot;
 
         Global.isRotationAnimPlayingNow = false;
+        EventManager.TriggerEvent("OnPivotReset", pivotObj);
     }
 
     private IEnumerator RotateObjectUpDown(GameObject pivotObj, float rotateVal)
@@ -70,5 +71,6 @@ public class RubikBrain : MonoBehaviour
         pivotObj.transform.rotation = targetRot;
 
         Global.isRotationAnimPlayingNow = false;
+        EventManager.TriggerEvent("OnPivotReset", pivotObj);
     }
 }
