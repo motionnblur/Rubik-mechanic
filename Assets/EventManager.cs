@@ -9,6 +9,7 @@ public static class EventManager {
     private static Dictionary<string, Action<bool>> boolEventDictionary = new Dictionary<string, Action<bool>>();
     private static Dictionary<string, Action<string>> stringEventDictionary = new Dictionary<string, Action<string>>();
     private static Dictionary<string, Action<Vector3>> vector3EventDictionary = new Dictionary<string, Action<Vector3>>();
+    private static Dictionary<string, Action<GameObject>> gameobjectEventDictionary = new Dictionary<string, Action<GameObject>>();
 
     #region AddListeners
     public static void AddListener(string eventName, Action listener) {
@@ -74,6 +75,16 @@ public static class EventManager {
             vector3EventDictionary.Add(eventName, listener);
         }
     }
+    public static void AddListener(string eventName, Action<GameObject> listener)
+    {
+        if (gameobjectEventDictionary.ContainsKey(eventName))
+        {
+            gameobjectEventDictionary[eventName] += listener;
+        }else
+        {
+            gameobjectEventDictionary.Add(eventName, listener);
+        }
+    }
     #endregion
 
     #region RemoveListeners
@@ -118,6 +129,13 @@ public static class EventManager {
         if (vector3EventDictionary.ContainsKey(eventName))
         {
             vector3EventDictionary[eventName] -= listener;
+        }
+    }
+    public static void RemoveListener(string eventName, Action<GameObject> listener)
+    {
+        if (gameobjectEventDictionary.ContainsKey(eventName))
+        {
+            gameobjectEventDictionary[eventName] -= listener;
         }
     }
     #endregion
@@ -168,6 +186,14 @@ public static class EventManager {
     {
         Action<Vector3> thisEvent = null;
         if (vector3EventDictionary.TryGetValue(eventName, out thisEvent))
+        {
+            thisEvent?.Invoke(value);
+        }
+    }
+    public static void TriggerEvent(string eventName, GameObject value)
+    {
+        Action<GameObject> thisEvent = null;
+        if (gameobjectEventDictionary.TryGetValue(eventName, out thisEvent))
         {
             thisEvent?.Invoke(value);
         }

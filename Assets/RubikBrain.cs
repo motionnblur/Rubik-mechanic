@@ -15,20 +15,12 @@ public class RubikBrain : MonoBehaviour
         EventManager.RemoveListener("OnRotateLeft", OnRotateLeft);
     }
 
-    private void OnRotateRight(Vector3 pos)
+    private void OnRotateRight(GameObject pivot)
     {
-        if(pos.y > 0.5f && pos.y < 1.5f)
-        {
-            
-        }
+        
     }
-    private void OnRotateLeft(Vector3 pos)
+    private void OnRotateLeft(GameObject pivot)
     {
-        Debug.Log(pos);
-
-        if(pos.y > 0.5f && pos.y < 1.5f)
-        {
-            
-        }
+        
     }
 }

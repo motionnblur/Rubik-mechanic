@@ -55,11 +55,24 @@ public class Manager : MonoBehaviour
                     obj.transform.SetParent(pivotObj.transform);
                 }
 
-                EventManager.TriggerEvent("OnRotateRight", hit.point);
+                EventManager.TriggerEvent("OnRotateRight", pivotObj);
             }
             else if (onSliceRight == false){
                 Debug.Log("Hit to the left");
-                EventManager.TriggerEvent("OnRotateLeft", hit.point);
+
+                GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
+                Vector3 center = GetCenter(childCubes);
+
+                GameObject pivotObj = new GameObject("Pivot");
+                pivotObj.transform.SetParent(rubik.transform);
+                pivotObj.transform.position = center;
+
+                foreach (GameObject obj in childCubes)
+                {
+                    obj.transform.SetParent(pivotObj.transform);
+                }
+
+                EventManager.TriggerEvent("OnRotateLeft", pivotObj);
             }
             movable = false;
         }
