@@ -32,6 +32,7 @@ public class Manager : MonoBehaviour
     }
     void Update()
     {
+        if(Global.isRotationAnimPlayingNow) return;
         if(!movable) return;
         if(!mouseDown) return;
         if(!onSliceStarted) return;

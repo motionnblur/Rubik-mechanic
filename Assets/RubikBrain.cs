@@ -26,15 +26,18 @@ public class RubikBrain : MonoBehaviour
 
     private IEnumerator RotateObject(GameObject pivotObj, float rotateVal)
     {
+        Global.isRotationAnimPlayingNow = true;
+
         Quaternion targetRot = Quaternion.Euler(0, -rotateVal, 0);
 
         while (Quaternion.Angle(pivotObj.transform.rotation, targetRot) > 0.01f)
         {
-            pivotObj.transform.rotation = Quaternion.Lerp(pivotObj.transform.rotation, targetRot, Time.deltaTime * 2f); // rotate 2 degree per second
+            pivotObj.transform.rotation = Quaternion.Lerp(pivotObj.transform.rotation, targetRot, Time.deltaTime * 3.5f); // rotate 2 degree per second
             yield return null; // wait for the next frame
         }
 
         pivotObj.transform.rotation = targetRot;
-    }
 
+        Global.isRotationAnimPlayingNow = false;
+    }
 }
