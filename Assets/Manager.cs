@@ -40,9 +40,7 @@ public class Manager : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {            
-            if (onSliceRight == true){
-                Debug.Log("Hit to the right");
-                
+            if (onSliceRight == true){                
                 GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
                 Vector3 center = GetCenter(childCubes);
 
@@ -58,8 +56,6 @@ public class Manager : MonoBehaviour
                 EventManager.TriggerEvent("OnRotateRight", pivotObj);
             }
             else if (onSliceRight == false){
-                Debug.Log("Hit to the left");
-
                 GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
                 Vector3 center = GetCenter(childCubes);
 
@@ -109,7 +105,6 @@ public class Manager : MonoBehaviour
         {
             if (Mathf.Abs(obj.transform.position.y - yPos) < 0.5f) // Check if the y position is close to 0.5
             {
-                Debug.Log("Found GameObject: " + obj.name);
                 returnArr[counter++] = obj;
             }
         }

@@ -17,10 +17,24 @@ public class RubikBrain : MonoBehaviour
 
     private void OnRotateRight(GameObject pivot)
     {
-        
+        StartCoroutine(RotateObject(pivot, 90f));
     }
     private void OnRotateLeft(GameObject pivot)
     {
-        
+        StartCoroutine(RotateObject(pivot, -90f));
     }
+
+    private IEnumerator RotateObject(GameObject pivotObj, float rotateVal)
+    {
+        Quaternion targetRot = Quaternion.Euler(0, -rotateVal, 0);
+
+        while (Quaternion.Angle(pivotObj.transform.rotation, targetRot) > 0.01f)
+        {
+            pivotObj.transform.rotation = Quaternion.Lerp(pivotObj.transform.rotation, targetRot, Time.deltaTime * 2f); // rotate 2 degree per second
+            yield return null; // wait for the next frame
+        }
+
+        pivotObj.transform.rotation = targetRot;
+    }
+
 }
