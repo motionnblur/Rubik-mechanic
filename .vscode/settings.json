@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Rubik.sln"
+    "dotnet.defaultSolution": "Rubik-mechanic.sln"
 }
