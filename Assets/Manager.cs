@@ -75,7 +75,7 @@ public class Manager : MonoBehaviour
                     onSliceRight = false;
                     onSliceLeftRight = false;
                 }
-                else if (onSliceRight == false)
+                else
                 {
                     GameObject[] childCubes = FindGameObjectsWithYPosition(hit.point.y);
                     Vector3 center = GetCenter(childCubes);
@@ -91,10 +91,10 @@ public class Manager : MonoBehaviour
 
                     onSliceRight = true;
                     onSliceLeftRight = false;
-                    }
-                    movable = false;
                 }
-            else if (onSliceUpDown == true)
+                    movable = false;
+            }
+            else
             {
                 if (onSliceUp == true)
                 {
@@ -113,7 +113,7 @@ public class Manager : MonoBehaviour
                     onSliceUp = false;
                     onSliceUpDown = false;
                 }
-                else if(onSliceUp == false)
+                else
                 {
                     GameObject[] childCubes = FindGameObjectsWithXPosition(hit.point.x);
                     Vector3 center = GetCenter(childCubes);
@@ -126,7 +126,6 @@ public class Manager : MonoBehaviour
                     }
 
                     EventManager.TriggerEvent("OnRotateDown", pivot);
-                    Debug.Log("downnn");
 
                     onSliceUp = true;
                     onSliceUpDown = false;
@@ -149,13 +148,13 @@ public class Manager : MonoBehaviour
     }
     void OnSliceUp()
     {
-        onSliceUpDown = true;
+        onSliceLeftRight = false;
         onSliceUp = true;
         onSliceStarted = true;
     }
     void OnSliceDown()
     {
-        onSliceUpDown = true;
+        onSliceLeftRight = false;
         onSliceUp = false;
         onSliceStarted = true;
     }

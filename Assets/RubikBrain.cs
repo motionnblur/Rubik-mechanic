@@ -38,7 +38,6 @@ public class RubikBrain : MonoBehaviour
 
     private IEnumerator RotateObjectLeftRight(GameObject pivotObj, float rotateVal)
     {
-        Debug.Log("down");
         Global.isRotationAnimPlayingNow = true;
 
         Quaternion targetRot = pivotObj.transform.rotation * Quaternion.Euler(0, rotateVal, 0);
@@ -57,7 +56,6 @@ public class RubikBrain : MonoBehaviour
 
     private IEnumerator RotateObjectUpDown(GameObject pivotObj, float rotateVal)
     {
-        Debug.Log("up");
         Global.isRotationAnimPlayingNow = true;
 
         Quaternion targetRot = pivotObj.transform.rotation * Quaternion.Euler(rotateVal, 0, 0);
